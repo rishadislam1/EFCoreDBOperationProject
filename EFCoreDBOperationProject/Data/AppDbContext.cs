@@ -6,7 +6,9 @@ namespace EFCoreDBOperationProject.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options): base(options)
         {
-
         }
+
+        public DbSet<Books> Books { get; set; }
+        public DbSet<Language> Languages { get; set; }
     }
 }
