@@ -1,4 +1,12 @@
+using EFCoreDBOperationProject.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// dbcontext settings
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDb"))
+);
 
 // Add services to the container.
 
