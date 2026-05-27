@@ -42,19 +42,13 @@ namespace EFCoreDBOperationProject.Controllers
         }
 
         [HttpPut("bulk")]
-        public async Task<IActionResult> UpdateBookInbulk([FromBody] Books model)
+        public async Task<IActionResult> UpdateBookInbulk()
         {
-            //var book = await appDbContext.Books.FirstOrDefaultAsync(x => x.Id == bookId);
-            //if (book == null)
-            //{
-            //    return NotFound();
-            //}
-            //book.Title = model.Title;
-            //book.Description = model.Description;
-            //book.NoOfPages = model.NoOfPages;
-            appDbContext.Books.Update(model);
-            await appDbContext.SaveChangesAsync();
-            return Ok(model);
+            await appDbContext.Books.ExecuteUpdateAsync(x => x
+            .SetProperty(p => p.Title, "Book Title")
+            .SetProperty(p=>p.Description,"Hello Description")
+            );
+             return Ok();
         }
 
     }
