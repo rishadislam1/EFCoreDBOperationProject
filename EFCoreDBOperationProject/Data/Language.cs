@@ -6,6 +6,6 @@
         public string Title { get; set; }
         public string Description { get; set; } = string.Empty;
 
-        public ICollection<Books> Books { get; set; }
+        public virtual ICollection<Books> Books { get; set; }
     }
 }

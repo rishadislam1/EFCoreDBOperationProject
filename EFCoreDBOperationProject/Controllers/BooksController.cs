@@ -36,6 +36,19 @@ namespace EFCoreDBOperationProject.Controllers
             return Ok(book);
         }
 
+        [HttpGet("lazyLoading")]
+        public async Task<IActionResult> GetBooksLazyLoadingAsync()
+        {
+// for adding lazyloading first install microsoft.entityframeworkcore.proxies. then add in program.cs with options. then add virtual with all class connected with foreign keys.
+
+            var book = await appDbContext.Books.FirstAsync();
+
+            var author = book.Author;
+
+            return Ok(book);
+        }
+
+
         [HttpGet("language")]
         public async Task<IActionResult> GetBooksLanguageAsync()
         {
