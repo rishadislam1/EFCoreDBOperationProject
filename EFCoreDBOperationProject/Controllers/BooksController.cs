@@ -9,6 +9,13 @@ namespace EFCoreDBOperationProject.Controllers
     [ApiController]
     public class BooksController(AppDbContext appDbContext) : ControllerBase
     {
+        [HttpGet("")]
+        public async Task<IActionResult> GetBooksAsync()
+        {
+            var books = await appDbContext.Books.ToListAsync();
+            return Ok(books);
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Books model)
         {
@@ -49,6 +56,58 @@ namespace EFCoreDBOperationProject.Controllers
             .SetProperty(p=>p.Description,"Hello Description")
             );
              return Ok();
+        }
+
+        [HttpDelete("{bookId}")]
+        public async Task<IActionResult> DeleteBookByIdAsync([FromRoute] int bookId)
+        {
+            var book = await appDbContext.Books.FindAsync(bookId);
+            if(book == null)
+            {
+                return NotFound();
+            }
+            appDbContext.Books.Remove(book);
+            await appDbContext.SaveChangesAsync();
+
+            return Ok();
+
+        }
+
+        [HttpDelete("bulk")]
+        public async Task<IActionResult> DeleteBooksInBulkAsync()
+        {
+            var books = await appDbContext.Books.Where(x => x.Id < 5).ToListAsync();
+            appDbContext.Books.RemoveRange(books);
+            await appDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpDelete("bulkWithTime")]
+        public async Task<IActionResult> DeleteBooksInbulkWithTimeAsync()
+        {
+            var books = await appDbContext.Books.Where(x => x.Id < 5).ExecuteDeleteAsync();
+
+
+            return Ok();
+        }
+
+        [HttpDelete("bulkDeleteFromUI")]
+        public async Task<IActionResult> bulkDeleteFromUIAsync([FromBody] List<int> bookIds)
+        {
+            if (bookIds == null || !bookIds.Any())
+            {
+                return BadRequest("No book ids provided.");
+            }
+
+            var deletedCount = await appDbContext.Books
+                .Where(x => bookIds.Contains(x.Id))
+                .ExecuteDeleteAsync();
+
+            return Ok(new
+            {
+                Message = $"{deletedCount} books deleted successfully."
+            });
         }
 
     }

@@ -14,10 +14,10 @@ namespace EFCoreDBOperationProject.Controllers
         {
             _appDbContext = appDbContext;
         }
-
+        [HttpGet("")]
         public IActionResult GetAllCurrencies()
         {
-            var result = _appDbContext.Currencies.ToList();
+            var result = _appDbContext.Currencies.AsNoTracking().ToListAsync();
             return Ok();
         }
 
