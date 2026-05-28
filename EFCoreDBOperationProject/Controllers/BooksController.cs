@@ -21,6 +21,13 @@ namespace EFCoreDBOperationProject.Controllers
             return Ok(books);
         }
 
+        [HttpGet("eagerLoading")]
+        public async Task<IActionResult> GetBooksEagerLoadingAsync()
+        {
+            var books = await appDbContext.Books.Include(x => x.Author).ToListAsync();
+            return Ok(books);
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Books model)
         {
