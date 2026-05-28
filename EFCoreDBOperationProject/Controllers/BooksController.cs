@@ -61,6 +61,15 @@ namespace EFCoreDBOperationProject.Controllers
             return Ok(languages);
         }
 
+        // using sql queries
+        [HttpGet("usingSqlQueries")]
+        public async Task<IActionResult> GetBooksUsingSqlQueriesAsync()
+        {
+            var books = await appDbContext.Books.FromSql($"select * from Books").ToListAsync();
+
+            return Ok(books);
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Books model)
         {
