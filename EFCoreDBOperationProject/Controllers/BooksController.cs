@@ -83,7 +83,23 @@ namespace EFCoreDBOperationProject.Controllers
             return Ok(books);
         }
 
+        // using withoutEFCoreClass
+        [HttpGet("withoutEFCoreClass")]
+        public async Task<IActionResult> GetBooksWithoutEFCoreClassAsync()
+        {
+            var books = await appDbContext.Database
+                .SqlQuery<Books>($"select * from Books").ToListAsync();
+            return Ok(books);
+        }
 
+        // for update query in sql
+        [HttpGet("updateQuery")]
+        public async Task<IActionResult> UpdateQueryAsync()
+        {
+            var books = await appDbContext.Database
+                .ExecuteSqlAsync($"update Books set NoOfPages=1000 where Id=1");
+            return Ok(books);
+        }
 
 
         [HttpPost("")]
