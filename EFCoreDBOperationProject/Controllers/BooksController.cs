@@ -27,6 +27,26 @@ namespace EFCoreDBOperationProject.Controllers
             var books = await appDbContext.Books.Include(x => x.Author).ToListAsync();
             return Ok(books);
         }
+        [HttpGet("explicitLoading")]
+        public async Task<IActionResult> GetBooksExplicitLoadingAsync()
+        {
+            var book = await appDbContext.Books.FirstAsync();
+            await appDbContext.Entry(book).Reference(x => x.Author).LoadAsync();
+           
+            return Ok(book);
+        }
+
+        [HttpGet("language")]
+        public async Task<IActionResult> GetBooksLanguageAsync()
+        {
+            var languages = await appDbContext.Languages.ToListAsync();
+            foreach(var language in languages)
+            {
+                await appDbContext.Entry(language).Collection(x => x.Books).LoadAsync();
+            }
+
+            return Ok(languages);
+        }
 
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Books model)
