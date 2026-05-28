@@ -1,6 +1,7 @@
 ﻿using EFCoreDBOperationProject.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCoreDBOperationProject.Controllers
@@ -65,10 +66,25 @@ namespace EFCoreDBOperationProject.Controllers
         [HttpGet("usingSqlQueries")]
         public async Task<IActionResult> GetBooksUsingSqlQueriesAsync()
         {
+            
             var books = await appDbContext.Books.FromSql($"select * from Books").ToListAsync();
 
             return Ok(books);
         }
+
+        // using store procedure
+        [HttpGet("usingsp")]
+        public async Task<IActionResult> GetBooksUsingspAsync()
+        {
+            var parameter = new SqlParameter("@BookId", 1);
+            var books = await appDbContext.Books
+                .FromSql($"EXEC SP_GetAllBooks {parameter}").ToListAsync();
+
+            return Ok(books);
+        }
+
+
+
 
         [HttpPost("")]
         public async Task<IActionResult> AddNewBook([FromBody] Books model)
