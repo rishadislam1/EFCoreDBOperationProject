@@ -12,7 +12,12 @@ namespace EFCoreDBOperationProject.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetBooksAsync()
         {
-            var books = await appDbContext.Books.ToListAsync();
+            var books = await appDbContext.Books.Select(x=> new 
+            {
+                x.Id,
+                MyBookTitle = x.Title,
+                Author = x.Author !=null? x.Author.Name: "N/A"
+            }).ToListAsync();
             return Ok(books);
         }
 
